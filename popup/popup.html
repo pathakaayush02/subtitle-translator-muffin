@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SubLang - Universal Video Translator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="logo">SubLang</h1>
+      <p class="tagline">Universal Video Translator</p>
+    </header>
+
+    <!-- Status Badge -->
+    <div class="status-badge" id="statusBadge">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-text" id="statusText">Checking...</span>
+    </div>
+
+    <!-- Main Controls -->
+    <main class="main-content">
+      <!-- Subtitles Toggle -->
+      <div class="control-row">
+        <label class="control-label">Subtitles</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="subtitleToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Language Selector -->
+      <div class="control-row">
+        <label class="control-label">Language</label>
+        <select id="languageSelect" class="language-select">
+          <option value="ja">Japanese</option>
+          <option value="ko">Korean</option>
+          <option value="zh">Mandarin Chinese</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="hi">Hindi</option>
+          <option value="ar">Arabic</option>
+          <option value="pt-BR">Portuguese</option>
+          <option value="ru">Russian</option>
+        </select>
+      </div>
+
+      <!-- Font Size -->
+      <div class="control-row">
+        <label class="control-label">Font Size</label>
+        <div class="font-size-toggle">
+          <button class="font-btn" data-size="small">Small</button>
+          <button class="font-btn active" data-size="medium">Medium</button>
+          <button class="font-btn" data-size="large">Large</button>
+        </div>
+      </div>
+
+      <!-- Position Toggle -->
+      <div class="control-row">
+        <label class="control-label">Position</label>
+        <div class="position-toggle">
+          <button class="position-btn active" data-position="bottom">Bottom</button>
+          <button class="position-btn" data-position="top">Top</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span class="version">SubLang v1.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
