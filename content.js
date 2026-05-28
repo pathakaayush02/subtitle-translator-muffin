@@ -126,6 +126,7 @@ let lastResetTime = 0;
 let fragmentBuffer = '';
 let fragmentTimer = null;
 const FRAGMENT_THRESHOLD = 6;
+const FRAGMENT_THRESHOLD_KO = 4;  // Lower threshold for Korean
 
 // Video Detection
 function detectVideo() {
@@ -174,6 +175,8 @@ function onVideoFound(videoElement) {
   // Read saved language from storage and connect transcriber
   chrome.storage.local.get(['selectedLanguage'], (data) => {
     const language = data.selectedLanguage || 'ja';
+    const threshold = language === 'ko' ? FRAGMENT_THRESHOLD_KO : FRAGMENT_THRESHOLD;
+    
     transcriber.connect(BACKEND_WS_URL, language, async (transcript, isFinal) => {
       if (!isFinal) return;
       
@@ -181,9 +184,12 @@ function onVideoFound(videoElement) {
       if (!trimmed) return;
       
       console.log("SubLang FINAL:", trimmed);
+      if (language === 'ko') {
+        console.log("SubLang Korean transcript length:", trimmed.length, "threshold:", threshold);
+      }
       
       // Buffer short CJK fragments — they're parts of sentences
-      if (trimmed.length <= FRAGMENT_THRESHOLD) {
+      if (trimmed.length <= threshold) {
         fragmentBuffer += trimmed;
         if (fragmentTimer) clearTimeout(fragmentTimer);
         fragmentTimer = setTimeout(async () => {
@@ -431,6 +437,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       
     case "LANGUAGE_CHANGED":
       transcriber.disconnect();
+      const threshold = message.language === 'ko' ? FRAGMENT_THRESHOLD_KO : FRAGMENT_THRESHOLD;
       transcriber.connect(BACKEND_WS_URL, message.language, async (transcript, isFinal) => {
         if (!isFinal) return;
         
@@ -440,7 +447,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log("SubLang FINAL:", trimmed);
         
         // Buffer short CJK fragments — they're parts of sentences
-        if (trimmed.length <= FRAGMENT_THRESHOLD) {
+        if (trimmed.length <= threshold) {
           fragmentBuffer += trimmed;
           if (fragmentTimer) clearTimeout(fragmentTimer);
           fragmentTimer = setTimeout(async () => {
@@ -507,7 +514,11 @@ async function translateText(text, sourceLang) {
       body: JSON.stringify({ text: text.trim(), sourceLang })
     })
     const data = await response.json()
-    return data.translated || null
+    const translated = data.translated || null
+    if (sourceLang === 'ko') {
+      console.log('SubLang Korean translation:', text.trim(), '→', translated)
+    }
+    return translated
   } catch (e) {
     console.warn('SubLang: translation failed:', e.message)
     return null
