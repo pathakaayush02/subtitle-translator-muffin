@@ -2,7 +2,7 @@
 // Video Detection Engine and Audio Capture with Deepgram Transcription
 
 // Phase 8: Change to Render URL before deployment
-const BACKEND_WS_URL = "ws://localhost:3000";
+const BACKEND_WS_URL = "wss://translator-muf-backend.onrender.com";
 
 // Transcriber class (inline copy - content scripts can't use ES modules)
 class Transcriber {
@@ -501,7 +501,7 @@ async function translateText(text, sourceLang) {
   if (sourceLang === 'en') return text  // already English
   
   try {
-    const response = await fetch('http://localhost:3000/api/translate', {
+    const response = await fetch('https://translator-muf-backend.onrender.com/api/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: text.trim(), sourceLang })

@@ -11,7 +11,9 @@
   ],
   "host_permissions": [
     "<all_urls>",
-    "ws://localhost:3000/*"
+    "ws://localhost:3000/*",
+    "https://translator-muf-backend.onrender.com/*",
+    "wss://translator-muf-backend.onrender.com/*"
   ],
   "background": {
     "service_worker": "background.js"
